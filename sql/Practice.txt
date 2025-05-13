@@ -1,0 +1,27 @@
+I have these 4 tables in a financial application. below are the tables & the key columns :
+ProductMaster (ProductId, ProductName) AccountMaster (AccountId, AccountName) Positions (Date, AccountId, ProductId, Quantity) Prices (Date, ProductId, Price)
+ 
+give me a query to get all accounts that holds more than 1000 quantity of a product called IBM on 30jan2025
+
+
+select am.AccountId, am.AccountName
+from AccountMaster am
+join Positions p
+on am.AccountId = p.AccountId
+join ProductMaster pm
+on p.ProductId = pm.ProductId
+where p.Quantity > 1000 and p.ProductName = 'IBM' and p.Date = '2025-01-30'
+
+
+
+select am.AccountId, am.AccountName  from AccountMaster am
+join 
+Positions p 
+on p.AccountId = am.AccountId
+join 
+ProductMaster pm
+on pm.ProductId = p.ProductId
+where 
+p.Quantity > 1000
+and pm.ProductName = 'IBM'
+and p.Date = '30jan2025'
