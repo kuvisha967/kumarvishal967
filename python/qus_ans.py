@@ -1,3 +1,4 @@
+####string method
 # # count the char
 # char_st = "apple"
 # char_cnt = {}
@@ -76,6 +77,41 @@
 # f_str = ''.join(str2)
 # print(f_str)
 
+
+# remove white spaces
+# str1 = "        a b c d      "
+# st2=[]
+# l_str1= list(str1)
+# print(l_str1)
+#
+# for i in l_str1:
+#     if i != " ":
+#         st2.append(i)
+# st = ''.join(st2)
+# print(st)
+
+
+# st2=""
+# for i in str1:
+#     if not i.isspace():
+#         st2 += i
+# print(st2)
+
+
+# inbuild
+# str2 = str1.strip()
+# str3 = str1.replace(" ","")
+# print(str2)
+# print(str3)
+
+# Replace All Occurrences of a Substring
+
+# str1 = "Hello world, welcome to the world of Python."
+# old_substring = "world"
+# new_substring = "universe"
+#
+# str2= str1.replace(old_substring,new_substring)
+# print(str2)
 
 
 
