@@ -349,13 +349,47 @@
 # print(cnt_li)
 
 
-arr = {34,20,23,70}
-arr_l = list(arr)
+# arr = {34,20,23,70}
+# arr_l = list(arr)
+#
+# arr_l.sort(reverse=True)
+#
+# larg_sum= arr_l[0] + arr_l[1]
+#
+# reslt= {larg_sum}
+#
+# print(reslt)
 
-arr_l.sort(reverse=True)
 
-larg_sum= arr_l[0] +arr_l[1]
+# a = "Hello, World!"
+# print(a[0])
 
-reslt= {larg_sum}
 
-print(reslt)
+
+# s = "jar"
+# t = "jam"
+# s1, t1 = {}, {}
+# for i in s:
+#     if i in s1:
+#         s1[i] += 1
+#     else:
+#         s1[i] = 1
+#     # print(s1)
+# for i in t:
+#     if i in t1:
+#         t1[i] += 1
+#     else:
+#         t1[i] = 1
+#     # print(t1)
+# if len(s) == len(t) and s1 == t1:
+#     print("anagram")
+# else:
+#     print("not anagram")
+
+# nums = [3,5,6,4]
+# target = 7
+#
+# for i in range(len(nums)):
+#     for j in range(i+1, len(nums)):
+#         if nums[i] + nums[j] == target:
+#             print([i,j])

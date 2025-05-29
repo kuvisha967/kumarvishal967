@@ -114,4 +114,77 @@
 # print(str2)
 
 
+# # Find the First Non-Repeated Character
+# str1 = "swiss"
+#
+# for i in str1:
+#     if str1.count(i) == 1:
+#         print("First Non-Repeated Character:",i)
+#         break
+# else:
+#     print("not found any")
 
+
+# # Check if Two Strings Are Rotations of Each Other
+# str1 = "abcd"
+# str2 = "dabs"
+#
+# if len(str1) != len(str2):
+#     print(False)
+#
+# for i in range(len(str1)):
+#     s = str1[i:] + str1[:i]
+#     if s == str2:
+#         print(True)
+
+# # Remove Consecutive Duplicates
+# str1 = "aaabbccdaa"
+#
+# s = list(str1)
+# str2 = []
+#
+# for i in range(len(s)):
+#     if i == 0 or s[i] != s[i-1]:
+#         str2.append(s[i])
+# print(str2)
+# f_str = ''.join(str2)
+# print(f_str)
+#
+#
+# str1 = "aaabbccdaa"
+#
+# str2 = ""
+#
+# for i in range(len(str1)):
+#     if i== 0 or str1[i] != str1[i-1]:
+#         str2 += str1[i]
+# print(str2)
+
+# strs = ["act","pots","tops","cat","stop","hat"]
+# d_str = {}
+#
+# for i in strs:
+#     srt_s = ''.join(sorted(i))
+#     print(f'str_s:{srt_s}')
+#     if srt_s in d_str:
+#         d_str[srt_s].append(i)
+#         print(i)
+#     else:
+#         d_str[srt_s] = [i]
+#
+# print(d_str)
+# print(list(d_str.values()))
+
+
+nums = [1,2,2,3,3,3]
+k = 2
+
+num2 = []
+# numss= nums.count(2)
+# print(numss)
+
+
+for i in nums:
+    if nums.count(i) == k:
+        num2.append(i)
+print(num2)

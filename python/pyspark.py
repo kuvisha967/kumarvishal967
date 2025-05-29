@@ -48,16 +48,16 @@
 # var= list(filter(lambda i: i%3==0 and i%5==0,li))
 # print(var)
 
-st="153"
-len_st= len(st)
-arm=0
-for i in st:
-    arm+=int(i)**len_st
-# print(arm)
-if arm==int(st):
-    print(f'yes ({arm}) is a armstrong num')
-else:
-    print(f'No ({arm}) is not an armstrong num')
+# st="153"
+# len_st= len(st)
+# arm=0
+# for i in st:
+#     arm+=int(i)**len_st
+# # print(arm)
+# if arm==int(st):
+#     print(f'yes ({arm}) is a armstrong num')
+# else:
+#     print(f'No ({arm}) is not an armstrong num')
 #
 
 # def arm(st):
@@ -88,3 +88,11 @@ else:
 # for i in range(100,10001):
 #     if arm(i):
 #         print(i)
+
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="yourusername",
+  password="yourpassword"
+)
