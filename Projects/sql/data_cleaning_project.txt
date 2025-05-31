@@ -1,0 +1,160 @@
+######## Data Cleaning Project ###########
+
+On real time dataset: checking for duplicates, if there are duplicates removing it then, checking if there are bad or wrong data present if yes update it accordingly and updating date clolumn as DATE datatype for smoother data analysis.
+
+After performing above mentiones cleaning data process, the flow of data will improve by 90% and data redundency will improve.
+
+Importing dataset on MYSQL Workbench were:
+Table name: layoffs
+
+
+###############################################################
+
+1.Creating a duplicate table so that main table be untouched and can be use when
+something go wrong and raw data can be used and copying all data from layoffs to layoffs_staging.
+
+CREATE TABLE layoffs_staging
+like layoffs;
+
+Select * from layoffs_staging;
+
+INSERT layoffs_staging
+select * from layoffs;
+################################################################ 
+
+
+2.After analysing found that in the dataset there is no identity column present which will give unique value for particular row so, by adding a row_num column and using row_number ranking function will assign a unique value to each row which will help to analysing.
+
+-- Using CTE to check for columns to be kept in row_number function
+
+with duplicate_cte as (
+select *, 
+row_number() over (Partition by company, location, industry, total_laid_off, percentage_laid_off, `date`, stage, country, funds_raised_millions) as row_num
+from layoffs_staging
+)
+
+-- this will check for duplicates rows.
+select * from duplicate_cte where row_num > 1;
+
+-- cheking for particular row having number of duplicate.
+select * from duplicate_cte where company = 'capser'; 
+
+-- we have to add a column row_num into table which will assing a unique value fpr each row and then we can delete the duplicates.
+
+-- creating new table
+
+CREATE TABLE `laoyoffs_stating2`(
+	`company` text,
+	`location` text,
+	`industry` text,
+	`total_laid_off` int,
+	`percentage_laid_off` text,
+	`date` text,
+	`stage` text,
+	`country` text,
+	`funds_raised_millions` int,
+	`row_num` int
+) Engine = InnoDB DEAFULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+
+INSERT INTO laoyoffs_stating2
+select *, 
+row_number() over (Partition by company, location, industry, total_laid_off, percentage_laid_off, `date`, stage, country, funds_raised_millions) as row_num
+from layoffs_staging;
+
+select * from laoyoffs_stating2 where row_num > 1
+
+Delete from laoyoffs_stating2 where row_num > 1 --this will delete the duplicates.
+
+#####################################################################################
+
+-- Standardizing data
+-- While analysing found that there are whitespaces in some records of company column, so to fix this issue using TRIM.
+
+Select distinct(TRIM(company)) from laoyoffs_stating2;
+
+Update laoyoffs_stating2 Set company = TRIM(company;
+
+#####################################################################################
+
+-- There are some wrong values input for industry column need to update with right value.
+
+Select * from laoyoffs_stating2 where industry like 'crypto%';
+
+Select distinct industry from laoyoffs_stating2 where industry like 'crypto%';
+
+Update laoyoffs_stating2 Set industry = 'crypto' where industry like 'crypto%';
+
+Update laoyoffs_stating2 Set industry = 'crypto' where industry like 'crypto%';
+
+
+Select * from laoyoffs_stating2 where country like 'United State%';
+
+Select distinct country, TRIM(Trailing '.' from contry)
+from laoyoffs_stating2 where country like 'United State%';
+
+Update laoyoffs_stating2 Set country = TRIM(Trailing '.' from contry) 
+where industry like 'United State%';
+
+#####################################################################################
+
+-- while analysing found date column is text data type so need to update it to DATE data type.
+
+Select `date`, STR_TO_DATE(`date` , '%m/%d/%Y') from laoyoffs_stating2;
+
+Update laoyoffs_stating2 Set `date` = STR_TO_DATE(`date` , '%m/%d/%Y');
+
+Note: date is an keyword that's why used actick (``) which is `date` so that it will work as column  name.
+
+-- After changing the data type you can now Alter date column to change it's data type to DATE.
+
+Alter Table laoyoffs_stating2 Modify column `date` DATE;
+
+
+#####################################################################################
+
+-- while analysing found that industry column having ' ' values so it will create problem while querying either it has to be null or values.
+To fix this issue we have check alternative records and update it accordingly.
+
+Note: While updating ' ' values creating problem, it's not allowing to insert values while doing update in sub-query. So, need to updat ' ' it to NULL first.
+
+
+update laoyoffs_stating2 Set industy = NULL where industry = ' ';
+
+
+Select t1.industry, t2.industry
+from laoyoffs_stating2 t1
+join laoyoffs_stating2 t2
+on t1.industry = t2.industry
+where t1.industry is null  
+and t2.industry in not null;
+
+Update laoyoffs_stating2 t1
+join laoyoffs_stating2 t2
+on t1.industry = t2.industry
+where t1.industry is null 
+and t2.industry in not null;
+
+select * from laoyoffs_stating2 where company like 'Airbnb';
+
+#####################################################################################
+
+-- Deleting records those are NULL.
+
+Select * from laoyoffs_stating2
+where total_laid_off is null
+and percentage_laid_off is null;
+
+Delete from laoyoffs_stating2
+where total_laid_off is null
+and percentage_laid_off is null;
+
+#####################################################################################
+
+-- Almost everything done for data cleaning, need to drop row_num column because in the original data set this is not existed.
+After deleting row_num column the final data set will be ready to load to database.
+
+Alter table laoyoffs_stating2 
+drop column row_num;
+
+select * from laoyoffs_stating2;
