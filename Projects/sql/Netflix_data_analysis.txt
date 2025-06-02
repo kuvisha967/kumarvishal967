@@ -1,0 +1,66 @@
+######################### NETFLIX Data Analysis Project #############################
+
+Prupose of this project is to analyse NETFLIX Dataset and increase analytical experience for large complex dataset.
+
+#####################################################################################
+
+-- First have to create table of NETFLIX:
+
+Create Table netflix(
+
+	show_id			VARCHAR(6),
+	type			VARCHAR(10),
+	title			VARCHAR(150),
+	director		VARCHAR(208),
+	casts			VARCHAR(1000),
+	country			VARCHAR(150),
+	date_added		VARCHAR(50),
+	release_year	INT,
+	rating			VARCHAR(10),
+	duration		VARCHAR(15),
+	listed_in		VARCHAR(250),
+	description		VARCHAR(250)
+);
+
+select * from netflix;
+
+-- Now have to insert data into this table for this we have to import data from csv file. so, using Postgresql to import data from csv file.
+
+-- After importing data need to validate if data is inserted correctly.
+
+select * from netflix;
+
+select count(*)as total_cnt from netflix;
+
+select distinct type from netflix;
+
+#####################################################################################
+
+-- business problem:
+
+-- 1. Count the number of movies vs tv shows:
+
+Select type, count(*) as total_cnt from netflix group by type;
+
+-- 2.Find the most common rating for movies and tv shows.
+
+select type, rating
+select type, rating, count(*) 
+rank() over(partition by type order by count(*) DESC) as ranking
+from netflix
+group by 1,2) as t1
+where ranking = 1;
+
+-- 3.List all movies release in a specific year(2020).
+
+select * from netflix where type = 'Movies' and release_year = 2020;
+
+-- 4.Find top 5 countries with the most content on Netflix.
+
+select 
+unnest(String_To_Array(country, ',')) as new_country,
+count(show_id) as total_show
+from netflix
+gorup by 1
+order by 2 DESC
+limit 5;

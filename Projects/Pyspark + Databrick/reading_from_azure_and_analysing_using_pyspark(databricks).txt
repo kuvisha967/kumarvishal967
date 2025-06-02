@@ -1,0 +1,47 @@
+################### Pyspark real time end-to-end project ############################
+
+1.Business use case: Data flowing from web apps and getting store into azure datalake blob storage, we need to connect our databricks to blob storage and need to do data cleaning of the data and perfom analytics on top of it.
+
+2.Using Databricks for creating table and importing data and analyse and cleaning data.
+
+#####################################################################################
+
+3.Architecture: azure blob >> data lake >> databrick(pyspark) >> metrics
+
+#####################################################################################
+
+4.Mount or connect with azure blob to databrick using access key.
+
+dbutils.fs.mount(
+	source = "wasbs://file_nameblobstorage.blob.core.windows.net"
+	mount_point = "/mnt/file_name"
+	extra_config = ("fs.azure.account.key.blob.core.windows.net":" access key")
+)
+
+#####################################################################################
+
+5. Read CSV from azure path.
+
+from pyspark.sql.function import *
+import urllib
+
+isheader = True
+inferchema = True
+
+df = spark.read.format('csv').option("header", isheader).option("inferSchema",inferchema).load("/mnt/file_path") 
+
+sf.show()
+display(df)
+
+df.columns
+df.describe().show()
+
+#####################################################################################
+
+6.Find out total sales based on country and city.
+
+df.groupby("country","city").sum("sales").show()
+
+7.Quantity order for each city.
+
+df.groupby("city").sum("quantity_order").show()

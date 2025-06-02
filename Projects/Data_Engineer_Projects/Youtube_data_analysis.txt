@@ -1,0 +1,115 @@
+########################## Data-Engineering Project ##############################
+
+Requirenment:	1.Launching new data-driven campaign
+				2.Main advertising channel: YouTube
+				3.Initial question to answers
+				
+Goals and Success Criteria:
+1.Data Ingestion
+2.Data Lake
+3.AWS cloud
+4.ETL Design
+5.Scalability
+6.Reporting
+
+#####################################################################################
+
+Dataset from YouTube
+1.Top trending videos
+2.Source: kaggle. Data collected using YouTube API
+
+#####################################################################################
+
+Difference between on-premise and cloud.
+> A 10-node cluster running for 10 hours cost the same as 100-node cluster running for one hour.
+
+#####################################################################################
+
+Starting project:
+
+1.AWS login:
+Services used-
+a.IAM : on IAM dashboard goto user and create an IAM user (kr_vishal) create a password.
+		a.1.IAM user name: kr_vishal
+note: on first login need to reset password if under requirenment checked the option(user must create a new password at next sign-in) 
+		a.2.IAM Role name: dataengineering-on-youtube-glue-s3-role
+		a.3.IAM Role name: dataengineering-on-youtube-lambda-s3-rol
+
+b.Give required access and create access key and download a csv containing creds.
+
+c.Create S3 bucket using aws consol.
+	s3 bucket name: dataengineering-on-youtube-dev 
+					dataengineering-on-youtube-dev-athena
+					dataengineering-on-youtube-dev-cleaned
+
+d.Download AWS CLI: 
+	upload dataset from local to S3 bucket.
+	commands: aws s3 cp. s3://dataengineering-on-youtube-dev/raw1/yotube/ --recursive --exclude "*" --include "*.json"
+	aws s3 cp INvideos.csv s3://dataengineering-on-youtube-dev/yotube/raw/region=in
+	aws s3 cp CAvideos.csv s3://dataengineering-on-youtube-dev/yotube/raw/region=ca
+	aws s3 cp USvideos.csv s3://dataengineering-on-youtube-dev/yotube/raw/region=us
+
+e.AWS Glue: create glue crawler
+			crawler name - dataengineering-on-youtube-glue-1
+							dataengineering-on-youtube-glue-2
+			Create glue database
+			database name - dataengineering-on-youtube-db
+							
+	note: run the crawler to fetch the data from s3 to glue catalog.
+
+*** At this point the glue job failed due to json format which was uploaded to s3,
+	so for this first we have to read the data from json and do transformation to convert it into proper table structure which is row-column, for this we need to create ETL job to clean the data and save it to parquet file.
+	
+#####################################################################################
+
+ETL:
+
+AWS Lambda: create lambda function
+			lambda name - dataengineering-on-youtube-lambda
+
+*** Need to prepare a lambda code using python, which will do ETL
+
+import awswrangler as wr
+import pandas as pd
+import urllib.parse
+import os
+
+#Temporary hard-coded AWS Settings
+os_input_s3_cleaned_layer = os.environ['s3_cleaned_layer']
+os_input_glue_catalog_db_name = os.environ['glue_catalog_db_name']
+os_input_glue_catalog_table_name = os.environ['glue_catalog_table_name']
+os_input_write_data_operation = os.environ['write_data_operation']
+
+
+def lambda_handler(event, context):
+	#get the object from the event and show itscontrol type
+	bucket = event['Records'][0]['s3']['bucket']['name']
+	key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoded = "utf-8")
+	
+	try:
+		#create DF from content
+		df_raw = wr.s3.read_json('s3://{}/{}'.format(bucket,key))
+		
+		#extract required column
+		df_step_1 = pd.json_normalized(sf_raw['items'])
+		
+		#write to s3
+		wr_response = wr.s3.to_parquet(
+			df = df_step_1,
+			path = os_input_s3_cleaned_layer,
+			dataset = True,
+			database = os_input_glue_catalog_db_name,
+			table = os_input_glue_catalog_table_name,
+			mode = os_input_write_data_operation
+		)
+		
+		return wr_response
+	except Exception as e:
+		print(e)
+		print('Error getting object {} from bucket {}. Make sure they exist nd your bucket is in the same region as this function.'.format(key, bucket)
+		raise e
+		
+Note: awswrangler will give a error so, this have to select in the section of layer in lambda function.
+
+
+
