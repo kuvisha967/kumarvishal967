@@ -1,0 +1,125 @@
+############################# Twitter data pipeline using Airflow ####################
+
+1.Login to twitter api:
+	a. on dasboard go to App, create new app choose development, Give name to app
+		app_name: etl_airflow_project
+	b. go to app setting and generate token and copy all secret key and access token.
+
+#####################################################################################
+
+2.Airflow code:
+
+-- create file twitter_etl.py
+
+import tweepy
+import pandas as pd
+import json
+from datetime import datetime
+import s3fs
+
+def run_twitter_etl():
+	access_key = ""
+	access_secret = ""
+	consumer_key = ""
+	consumer_secret = ""
+
+	#Twitter authentication
+	auth = tweepy.0AuthHandler(access_key, access_secret)
+	auth.set_access_token(consumer_key, consumer_secret)
+
+	#create an api object
+
+	api = tweepy.API(auth)
+
+	tweets = api.user_timeline(screen_name = '@elonmusk',
+								#200 is the maximum allowed count
+								count = 200
+								include_rt = False,
+								#Necessary to keep full_text
+								#otherwise only the first 140 words are extracted
+								tweet_mode = 'extended'
+								)
+	#print(tweets)
+
+	tweet_list = []
+	for tweet in tweets:
+		text = tweet._json["full_text]
+		
+		refined_tweet = {"user" : tweet.user.screen_name,
+							'text' : text,
+							'favorite_count' : tweet.favorite_count,
+							'created_at' : tweet.created_at
+						}
+						
+		tweet_list.append(refined_tweet)
+		
+	df = pd.DataFrame(tweet_list)
+	df.to_csv("s3://bucket_path/elonmusk_twetter_data.csv)
+
+#####################################################################################
+
+3.Login to AWS:
+	a. Create EC2 instance (launch instances)
+	b. instance name : Airflow_tweet_project
+	c. Create key pair: airflow_tweet_key
+	d. Connect EC2 instance with airflow (copy SSH client key)
+	
+NOte: Need to run some commands for updates:
+		sudo apt-get update
+		sudo apt install python3-pip
+		sudo pip install apache-airflow
+		sudo pip install pandas
+		sudo pip install s3fs
+		sudo pip install tweepy
+		
+--run this and above, on cmd (airflow stanalone) and copy the username and password.
+
+	e. goto instance copy public DNS and paste it on browser and give 8080 portnum
+	f. goto instance and under security for innbound rules and give all traffics allow.
+	g. Create s3 bucket
+#####################################################################################
+
+4. Login to Airflow
+
+Create a DAG using python
+
+-- create file : tweet_dag.py
+
+from datetime import timedelta
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.utils.dates import day_ago
+from datetime import datetime
+from twitter_etl import run_twitter_etl
+
+
+default_args = {
+	'owner' : 'airflow',
+	'depends_on_past' : False,
+	'start_date' : datetime(2025, 3, 6),
+	'email' : ['airflow@example.com'],
+	'email_on_failure' : False,
+	'emial_on_retry' : False,
+	'retries' : 1,
+	'retry_delay' : timedelta(minutes=1)
+}
+
+dag = DAG(
+	'tweet_dag',
+	default_args = default_args,
+	description = 'My first etl code'
+)
+
+run_etl = PythonOperator(
+	task_id = 'complete_twitter_etl',
+	python_callable = run_twitter_etl,
+	dag = dag
+)
+
+run_etl
+
+#####################################################################################
+5. Goto cmd where EC2 is running for airflow create files for etl code and dag repectively.
+Goto Airflow if dag file is able to see run the dag.
+error: access denied for write to s3
+Note: have to create IAM role to give EC2 permission for write on s3. 
