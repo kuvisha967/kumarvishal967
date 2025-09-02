@@ -36,3 +36,9 @@ select z.page_id from(
 select page_id from pages
 where page_id not in ( select page_id from page_likes)
 )z order by z.page_id asc;
+
+
+select p.page_id from pages p
+join page_like pl
+on p.page_id = pl.page_id
+where page_id is Null;
