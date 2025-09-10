@@ -59,16 +59,16 @@
 
 import pandas as pd
 
-df = pd.read_csv(r'E:\dataset\student_admission_record_dirty.csv')
+# df = pd.read_csv(r'/FileStore/tables/cleaned_student_admission_record_dirty.parquet')
 # print(df.head())
-print(df.count())
+# print(df.count())
 
 #checking for null
-null_chk = df.isnull().sum()
+# null_chk = df.isnull().sum()
 # print(null_chk)
 
 # droping missing value
-df_cln = df.dropna()
+# df_cln = df.dropna()
 # print(clean_df)
 
 # filling missing value
@@ -79,7 +79,37 @@ import pyarrow
 # prqt_df = df_cln.to_parquet(r'E:\dataset\cleaned_student_admission_record_dirty.parquet', engine = "pyarrow", index=False)
 
 
-df1 = pd.read_parquet(r'E:\dataset\cleaned_student_admission_record_dirty.parquet', engine = "pyarrow")
+# df1 = pd.read_parquet(r'F:\dataset\cleaned_student_admission_record_dirty.parquet', engine = "pyarrow")
 
 # print(df1.head())
-print(df1.count())
+# print(df1.count())
+
+# /FileStore/tables/student_admission_record_dirty.csv
+# /FileStore/tables/student_admission_record_dirty-1.csv
+
+import pandas as pd
+
+df = pd.read_csv(r'F:\dataset\student_admission_record_dirty.csv')
+
+# print(df.head())
+
+# print(df.isnull().sum())
+# print(df.isna().sum())
+print(df.notnull().sum())
+
+# print(df.columns)
+#
+# for col in df.columns:
+#     if df[col].dtype == 'object':
+#         df[col]
+
+cln_df = df.dropna(axis=0, how='any')
+print(cln_df.notnull().sum())
+
+print(len(df) - len(cln_df))
+# print(len(cln_df) - len(df))
+
+df1 = cln_df.to_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow',index=False)
+df2=pd.read_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow')
+print(df2.head())
+print(df2.count())
