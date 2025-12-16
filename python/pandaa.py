@@ -95,7 +95,7 @@ df = pd.read_csv(r'F:\dataset\student_admission_record_dirty.csv')
 
 # print(df.isnull().sum())
 # print(df.isna().sum())
-print(df.notnull().sum())
+# print(df.notnull().sum())
 
 # print(df.columns)
 #
@@ -103,13 +103,26 @@ print(df.notnull().sum())
 #     if df[col].dtype == 'object':
 #         df[col]
 
-cln_df = df.dropna(axis=0, how='any')
-print(cln_df.notnull().sum())
+# cln_df = df.dropna(axis=0, how='any')
+# print(cln_df.notnull().sum())
+#
+# print(len(df) - len(cln_df))
+# # print(len(cln_df) - len(df))
+#
+# df1 = cln_df.to_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow',index=False)
+# df2=pd.read_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow')
+# print(df2.head())
+# print(df2.count())
 
-print(len(df) - len(cln_df))
-# print(len(cln_df) - len(df))
 
-df1 = cln_df.to_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow',index=False)
-df2=pd.read_parquet(r'D:\cleaned_emp_data.parquet', engine='pyarrow')
-print(df2.head())
-print(df2.count())
+
+# import sys
+#
+# x = [1, 2, 3]
+# print(sys.getrefcount(x))  # reference count (includes internal refs)
+#
+# y = x   # another reference
+# print(sys.getrefcount(x))  # count increases
+#
+# del y   # delete one reference
+# print(sys.getrefcount(x))  # decreases

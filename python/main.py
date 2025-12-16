@@ -139,6 +139,17 @@
 #     if i in vwl:
 #         cnt=cnt+1
 # print(cnt)
+
+# st='vishal'
+# vwl='aeiou'
+# res = ""
+# for i in st:
+#     if i in vwl:
+#         res += i.upper()
+#     else:
+#         res += i
+# print(res)
+
 # islower isupper isnumeric isalpha
 # st='Ok, Hello, 123,Yes,89 @,rt&^7vh$%^4354'
 # lower=''
@@ -198,8 +209,11 @@
 #     print('not a anagram')
 
 # st='i love india'
-# # st= ["i","love","india"]
-# # st_j= " ".join(st)
+# st_s = st.split()
+# print(st_s)
+# st= ["i","love","india"]
+# st_j= " ".join(st)
+# print(st_j)
 # st1={}
 # for i in st:
 #     if i in st1:
@@ -393,3 +407,19 @@
 #     for j in range(i+1, len(nums)):
 #         if nums[i] + nums[j] == target:
 #             print([i,j])
+
+
+# nums = [1, 2, 3, 4, 2, 5, 3, 6]
+#
+# seen = set()
+# duplicates = []
+#
+# for n in nums:
+#     if n in seen:
+#         duplicates.append(n)
+#     else:
+#         seen.add(n)
+#
+# print(duplicates)  # [2, 3]
+
+

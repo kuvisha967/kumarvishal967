@@ -43,4 +43,15 @@ echo_input()'''
 #
 # print(no_duplicates)
 
-q
+
+
+import pandas as pd
+
+df= pd.read_csv(r'E:\dataset\student_admission_record_dirty.csv')
+# print(df.head())
+# print(df.count())
+
+fltr = df.isnull().sum()
+# print(fltr)
+
+

@@ -325,3 +325,107 @@
 #
 # print("Recursion Example Results:")
 # tri_recursion(6)
+
+
+# # st= 'vishal'
+# st = ["i","love","india"]
+# rv_st = ''
+# for i in st:
+#     rv_st = i + rv_st
+# print(rv_st)
+
+# li = [24,56,72,63,10,12,9]
+# # li.sort()
+# # print(f'second largest: {li[-2]}')
+#
+# max1 = max2 = float('-inf')
+# for i in li:
+#     if i> max1:
+#         max2 = max1
+#         max1 = i
+#     elif i > max2 and i != max1:
+#         max2 = i
+# print(max2)
+
+class Product:
+    def __init__(self, product_type, product_name, product_price):
+        self.product_name = product_name
+        self.product_type = product_type
+        self.product_price = product_price
+        self.discounted_price = None
+
+        if self.product_price <= 0:
+            raise ValueError("The price of the product must be positive")
+
+    def product_details(self):
+        try:
+            if self.product_type == 'Electronic':
+                if self.product_name == 'Mobile':
+                    discount = self.product_price * 0.02
+                elif self.product_name == 'Laptop':
+                    discount = self.product_price * 0.05
+                elif self.product_name == 'Tablet':
+                    discount = self.product_price * 0.03
+                else:
+                    raise ValueError("The product name is not supported")
+            elif self.product_type == 'Electrical':
+                if self.product_name == 'Fan':
+                    discount = self.product_price * 0.02
+                elif self.product_name == 'Light':
+                    discount = self.product_price * 0.025
+                else:
+                    raise ValueError("The product name is not supported")
+            else:
+                raise ValueError("The product type is not supported")
+
+            self.discounted_price = self.product_price - discount
+            return (f'Product_price: {self.product_price} and dicount_amount: {discount} and Discounted_price: {self.discounted_price}')
+
+        except Exception as e:
+            print(f'Erorr_Occured: {e}')
+
+        finally:
+            print('*****||Product Section||*****')
+
+class Customer(Product):
+    def __init__(self, product_type, product_name, product_price, customer_name, customer_card):
+        super().__init__(product_type, product_name, product_price)
+        self.customer_name = customer_name
+        self.customer_card = customer_card
+
+
+    def customer_details(self):
+        try:
+            if self.discounted_price is None:
+                self.product_details()
+
+            if self.customer_card.lower() == 'visa':
+                card_discount = self.discounted_price * 0.04
+
+            elif self.customer_card.lower() == 'rupay':
+                card_discount = self.discounted_price * 0.05
+            else:
+                raise ValueError("The customer card is not supported")
+
+            price_without_gst = self.discounted_price - card_discount
+            gst_cal = price_without_gst * 0.18
+            self.price_with_gst = price_without_gst + gst_cal
+
+            return (f'Product_price: {self.product_price} and Discounted_price: {self.discounted_price}',
+                    f'Price_without_gst: {price_without_gst} and gst_amount: {gst_cal} and price_with_gst: {self.price_with_gst}')
+
+        except Exception as e:
+            print(f'Erorr_Occured: {e}')
+
+        finally:
+            print('*****||Customer Section||*****')
+
+
+
+
+
+# p = Product('Electronic','Mobile',12697)
+# print(p.product_details())
+
+c = Customer('Electrical', 'Fan', 243, 'vishal', 'visa')
+print(c.customer_details())

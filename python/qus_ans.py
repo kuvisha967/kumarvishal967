@@ -160,6 +160,8 @@
 #         str2 += str1[i]
 # print(str2)
 
+
+## group anagram
 # strs = ["act","pots","tops","cat","stop","hat"]
 # d_str = {}
 #
@@ -176,6 +178,33 @@
 # print(list(d_str.values()))
 
 
+# # Find the Longest Common Substring
+# str1 = "abcdef"
+# str2 = "zcdemf"
+# # Expected Output: 'cd'
+# n= len(str2)
+# m= len(str1)
+#
+# dp = [[0] * (n + 1) for _ in range(m + 1)]
+#
+# max_len = 0
+# end_index = 0  # end index of substring in str1
+#
+# for i in range(1, m + 1):
+#     for j in range(1, n + 1):
+#         if str1[i - 1] == str2[j - 1]:
+#             dp[i][j] = dp[i - 1][j - 1] + 1
+#             if dp[i][j] > max_len:
+#                 max_len = dp[i][j]
+#                 end_index = i
+#         else:
+#             dp[i][j] = 0
+#
+# # extract the substring
+# print(str1[end_index - max_len:end_index])
+
+
+
 nums = [1,2,2,3,3,3]
 k = 2
 
@@ -184,7 +213,104 @@ num2 = []
 # print(numss)
 
 
+# for i in nums:
+#     if nums.count(i) == k:
+#         num2.append(i)
+# print(num2)
+
+count = {}
 for i in nums:
-    if nums.count(i) == k:
-        num2.append(i)
-print(num2)
+    if i in count:
+        count[i] += 1
+    else:
+        count[i] = 1
+    # count[i] = 1 + count.get(i, 0)
+# print(count)
+# buk = [[] for _ in range(len(nums)+1)]
+
+cnt = {}
+for i in nums:
+    if i in cnt:
+        cnt[i]=+i
+    else:
+        cnt[i] = 1
+# print(cnt)
+
+# f = open("Sample_1.csv","r")
+# f1= f.readlines()
+# print(f1)
+#
+# for i in f1:
+#     for j in i:
+#         if j == "I":
+#             continue
+# print("i can read file")
+# f.close()
+# f = open("Sample_1.csv","w")
+# f2= f.write("I Love my mom")
+# print(f2)
+#
+#
+# import MyModule as m
+# m.wish("vishal")
+
+
+st = ['vishal','anamika','vishal']
+# li = list(st)
+# print(li)
+# print(st[::-1])
+st1 = ""
+st2={}
+
+for i in (st):
+    st1 = i+st1
+# print(st1)
+
+for i in st:
+    if i in st2:
+        st2[i] += 1
+    else:
+        st2[i] = 1
+
+# print(st2)
+
+# li = [1,2,2,3,4]
+# # seen = set(li)
+# # print(seen)
+# s = set()
+# for i in li:
+#     s.add(i)
+# print(s)
+
+
+# def is_febo(num):
+#     a,b = 0,1
+#     while b<num:
+#         a,b = b,a+b
+#     return num == a or num == b
+# print(is_febo(13))
+
+def febo(n):
+    a,b = 0,1
+    for i in range(n):
+        print(a, end=" ")
+        a,b = b,a+b
+    return a
+febo(12)
+
+# lst= [[1, 2, [3]], [4, 5], [6, [7, 8]]]
+#
+# e_lst= []
+# # for i in lst:
+# #     for j in i:
+# #         e_lst.append(j)
+# #
+# # print(e_lst)
+#
+# for i in lst:
+#     if isinstance(i, list):
+#         e_lst.extend(lst(i))
+#     else:
+#         e_lst.append(i)
+# print(e_lst)
+
